@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * @var $block \Magento\Sales\Block\Order\Totals
+ * @see \Magento\Sales\Block\Order\Totals
+ */
+?>
+
+<?php foreach ($block->getTotals() as $_code => $_total) : ?>
+    <?php if ($_total->getBlockName()) : ?>
+        <?= $block->getChildHtml($_total->getBlockName(), false) ?>
+    <?php else : ?>
+        <tr class="<?= $block->escapeHtmlAttr($_code) ?>">
+            <th <?= /* @noEscape */ $block->getLabelProperties() ?> scope="row">
+                <?php if ($_total->getStrong()) : ?>
+                    <strong><?= $block->escapeHtml($_total->getLabel()) ?></strong>
+                <?php else : ?>
+                    <?= $block->escapeHtml($_total->getLabel()) ?>
+                <?php endif ?>
+            </th>
+            <td <?= /* @noEscape */ $block->getValueProperties() ?> data-th="<?= $block->escapeHtmlAttr($_total->getLabel()) ?>">
+                <?php if ($_total->getStrong()) : ?>
+                    <strong><?= /* @noEscape */ $block->formatValue($_total) ?></strong>
+                <?php else : ?>
+                    <?= /* @noEscape */ $block->formatValue($_total) ?>
+                <?php endif ?>
+            </td>
+        </tr>
+    <?php endif; ?>
+<?php endforeach ?>
+
+<?php
+$helper = $this->helper('Magegadgets\School\Helper\Data');
+$schoolId = $helper->getCurrentSchoolId();
+$schoolId = 0;
+?>
+<?php if($this->getOrder()->getData('status') == 'processing' && $schoolId == 4){ ?>
+    <tr class="grand_total deposit">
+        <th <?= /* @noEscape */ $block->getLabelProperties() ?> scope="row">
+            <strong>50% Deposit</strong>
+        </th>
+        <td <?= /* @noEscape */ $block->getValueProperties() ?> data-th="Grand Total">
+            <strong><span class="price"><?php echo "CA$".($_total->getValue()/2); ?></span></strong>
+        </td>
+    </tr>
+    <tr class="grand_total balance">
+        <th <?= /* @noEscape */ $block->getLabelProperties() ?> class="mark" scope="row">
+            <strong>Balance due</strong>
+        </th>
+        <td <?= /* @noEscape */ $block->getValueProperties() ?> data-th="Grand Total">
+            <strong><span class="price"><?php echo "CA$".($_total->getValue()/2); ?></span></strong>
+        </td>
+    </tr>
+<?php } ?>
